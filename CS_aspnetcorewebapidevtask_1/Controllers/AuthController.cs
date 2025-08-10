@@ -24,7 +24,6 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
         }
 
         [HttpPost("register")]
-        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
