@@ -15,10 +15,10 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
         private readonly CS_DbContext _context;
         private readonly decimal _vatRate;
 
-        public ProductController(CS_DbContext context, IConfiguration configuration)
+        public ProductController(CS_DbContext context, IConfigurationManager configuration)
         {
             _context = context;
-            _vatRate = configuration.GetValue<decimal>("VAT");
+            _vatRate = configuration.GetValue<decimal>("VAT"); // ToDo: this needs to change..or testing. Couldn't figure out problem.
         }
 
         // GET: api/productsUserOnly
