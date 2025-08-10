@@ -7,7 +7,6 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
 {
     [ApiController]
     [Route("api/products")]
-    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly CS_DbContext _context;
@@ -17,8 +16,9 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
             _context = context;
         }
 
-        // GET: api/products
+        // GET: api/productsUserOnly
         [HttpGet]
+        [Authorize(Roles ="Admin,User")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Product.ToListAsync();
@@ -26,6 +26,7 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
 
         // GET: api/products/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Product.FindAsync(id);

@@ -34,7 +34,7 @@ namespace CS_aspnetcorewebapidevtask_1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("CS_aspnetcorewebapidevtask_1.Models.User", b =>

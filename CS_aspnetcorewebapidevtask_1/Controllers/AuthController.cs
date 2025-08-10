@@ -12,7 +12,6 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "AdminOnly")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -25,6 +24,7 @@ namespace CS_aspnetcorewebapidevtask_1.Controllers
         }
 
         [HttpPost("register")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)

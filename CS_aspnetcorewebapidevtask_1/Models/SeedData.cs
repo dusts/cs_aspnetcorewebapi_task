@@ -24,7 +24,7 @@ namespace CS_aspnetcorewebapidevtask_1.Models
             if (adminUser == null)
             {
                 adminUser = new User { UserName = "admin", Email = "admin@admin.com" };
-                var result = await userManager.CreateAsync(adminUser, "Qwerty123"); // Very very strong password
+                var result = await userManager.CreateAsync(adminUser, "Qwerty123!"); // Very very strong password
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
@@ -36,7 +36,7 @@ namespace CS_aspnetcorewebapidevtask_1.Models
             if (normalUser == null)
             {
                 normalUser = new User { UserName = "user1", Email = "user1@aaa.com" };
-                var result = await userManager.CreateAsync(normalUser, "user1"); // Very very strong password
+                var result = await userManager.CreateAsync(normalUser, "User1!"); // Very very strong password
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(normalUser, "User");

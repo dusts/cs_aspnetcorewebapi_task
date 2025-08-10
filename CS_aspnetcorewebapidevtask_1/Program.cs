@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +24,36 @@ namespace CS_aspnetcorewebapidevtask_1
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                // Add JWT Bearer security definition
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Enter 'Bearer' followed by a space and your JWT token (e.g., 'Bearer eyJhbGci...')."
+                });
+                // Apply security requirement to endpoints with [Authorize]
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+                // Optional: Filter to show padlocks only for [Authorize] endpoints
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
 
             // Add DbContext with SQLite connection string
             builder.Services.AddDbContext<CS_DbContext>(options =>
@@ -40,7 +71,7 @@ namespace CS_aspnetcorewebapidevtask_1
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -76,7 +107,7 @@ namespace CS_aspnetcorewebapidevtask_1
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<CS_DbContext>();
-                context.Database.Migrate(); // creates db if it doesnt exist and applies migrations.
+                context.Database.EnsureCreated(); // creates db if it doesnt exist and applies migrations.
 
                 // Seed data for db
                 await SeedData.Initialize(services);
